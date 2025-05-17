@@ -44,7 +44,6 @@ def extract_data():
 
             df.to_csv(output_path, index=False)
 
-            print("Data saved to "+filename)
 
         except Exception as e:
             print(f"Failed to process {url}: {e}")

@@ -97,7 +97,5 @@ def main():
     berth_df, vessels_df = preprocess_data(berth_df, vessels_df)
     
     assignments = assign_berths(berth_df, vessels_df)
-    
-    print(assignments)
     assignments.to_csv('berth_assignments.csv', index=False)
 

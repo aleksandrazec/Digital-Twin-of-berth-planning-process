@@ -21,10 +21,6 @@ def combine_csv_files_from_folder(input_folder, output_file, id_column=0):
         print(f"Error: No CSV files in {input_folder}")
         return
 
-    print(f"Found {len(input_files)} CSV files:")
-    for f in input_files:
-        print(f"- {os.path.basename(f)}")
-
     combined_data = {}  
     all_headers = set()
     file_headers = []  
@@ -64,7 +60,3 @@ def combine_csv_files_from_folder(input_folder, output_file, id_column=0):
             row = [data.get(h, '') for h in all_headers]
             writer.writerow(row)
     
-    print(f"\nSuccessfully combined {len(input_files)} files")
-    print(f"Total unique IDs: {len(combined_data)}")
-    print(f"Output columns ({len(all_headers)}): {', '.join(all_headers)}")
-    print(f"Saved to: {output_file}")

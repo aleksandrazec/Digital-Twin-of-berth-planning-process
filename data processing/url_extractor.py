@@ -41,4 +41,4 @@ def extract_urls():
 
     df.to_csv("xml_links.csv", index=False)
 
-    print("Extraction complete. Saved to 'xml_links.csv'")
+

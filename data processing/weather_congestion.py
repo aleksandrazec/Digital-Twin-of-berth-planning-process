@@ -17,7 +17,7 @@ def congestion_impact_by_hour(hour):
         return np.random.uniform(5, 20)
 
 def aggregate_impacts(start_time, end_time, impact_func):
-    hours_range = pd.date_range(start=start_time.floor('H'), end=end_time.floor('H'), freq='H')
+    hours_range = pd.date_range(start=start_time.floor('h'), end=end_time.floor('h'), freq='h')
     if hours_range.empty:
         return None
     hours = hours_range.hour
@@ -25,7 +25,7 @@ def aggregate_impacts(start_time, end_time, impact_func):
     return round(np.mean(impacts), 2)
 
 def main():
-    print("Current working directory:", os.getcwd())
+    
 
     input_filename = "./estimated_times.csv"
     output_filename = "estimated_times_with_impacts.csv"
@@ -50,6 +50,4 @@ def main():
     df["congestion_impact_pct"] = congestion_impacts
 
     df.to_csv(output_filename, index=False)
-    print(f"Updated file saved as '{output_filename}'.")
-    print(df[["ETA_TIME", "ETD_TIME", "weather_impact_pct", "congestion_impact_pct"]].head())
 
