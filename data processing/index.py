@@ -23,3 +23,8 @@ output_file2= "estimated_times.csv"
 seperator.seperate_actual_and_estimated(input_file, output_file1, output_file2)
 
 system_schedule.main()
+
+input_file1 = "./estimated_times_with_impacts.csv"  
+input_file2 = "./operator_parameters.csv"
+output_file = "estimated_final.csv"
+csv_combinator.combine_two_csv_files(input_file1, input_file2, output_file, "AGENT_NAME")

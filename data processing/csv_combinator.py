@@ -1,6 +1,16 @@
 import csv
 import os
 from collections import defaultdict
+import pandas as pd
+
+
+def combine_two_csv_files(file_path1, file_path2, output_file, column_name):
+
+    file1_df = pd.read_csv(file_path1)
+    file2_df = pd.read_csv(file_path2)
+    
+    merged_df = pd.merge(file1_df, file2_df, on=column_name, how="inner")
+    merged_df.to_csv(output_file, index=False)
 
 def combine_csv_files_from_folder(input_folder, output_file, id_column=0):
 
