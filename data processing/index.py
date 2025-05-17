@@ -3,6 +3,8 @@ import data_scrape
 import csv_combinator
 import csv_nonempty
 import seperator
+import system_schedule
+
 
 url_extractor.extract_urls
 data_scrape.extract_data
@@ -19,3 +21,5 @@ input_file = "./vessels_with_full_info.csv"
 output_file1 = "actual_times.csv"
 output_file2= "estimated_times.csv"
 seperator.seperate_actual_and_estimated(input_file, output_file1, output_file2)
+
+system_schedule.main()
