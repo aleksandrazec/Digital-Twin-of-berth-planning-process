@@ -2,6 +2,11 @@ import pandas as pd
 import numpy as np
 import torch
 
+# TODO - change the data
+# the data needs to have beside vessel attributes, weather, congestion, reliabality
+# a couple of different ATAs, ATDs
+# 
+
 def load_data(filepath="your_combined_dataset.csv"):
     data = pd.read_csv(filepath)  # Replace with your actual file path
 

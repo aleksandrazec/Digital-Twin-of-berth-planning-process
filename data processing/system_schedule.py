@@ -1,7 +1,14 @@
 import pandas as pd
 from datetime import datetime, timedelta
 
+
 def load_data():
+    """
+    Load data from 2 files:
+    - 1 for berth details
+    - 1 for ETAs (into Datetime) and other vessel/boat stuff, into datetime objects,
+    returns 2 lists (1 for each bullet)
+    """
     berth_df = pd.read_csv('./berth/simplified_berth_details.csv')
     
     vessels_df = pd.read_csv('./estimated_times.csv', parse_dates=['ETA_TIME', 'ETD_TIME'])
@@ -9,6 +16,9 @@ def load_data():
     return berth_df, vessels_df
 
 def preprocess_data(berth_df, vessels_df):
+    """
+    Sort vessels by ETA time and convert them from Datetime to numbers
+    """
     vessels_df = vessels_df.sort_values('ETA_TIME')
     
     vessels_df['VESSEL_MAX_DRAFT'] = pd.to_numeric(vessels_df['VESSEL_MAX_DRAFT'], errors='coerce')
@@ -16,6 +26,10 @@ def preprocess_data(berth_df, vessels_df):
     return berth_df, vessels_df
 
 def assign_berths(berth_df, vessels_df):
+    """
+    
+    """
+
     berth_availability = {berth: [] for berth in berth_df['BERTH'].unique()}
     
     assignments = []
@@ -28,10 +42,13 @@ def assign_berths(berth_df, vessels_df):
         vessel_size = vessel.get('MAX_SIZE', 0)  
 
         
-        compatible_berths = berth_df[
-            (berth_df['MAX_DRAFT'] >= vessel_draft) & 
-            (berth_df['MAX_SIZE'] >= vessel_size) 
-        ]
+        # compatible_berths = berth_df[
+        #     (berth_df['MAX_DRAFT'] >= vessel_draft) & 
+        #     (berth_df['MAX_SIZE'] >= vessel_size) 
+        # ]
+
+        # list comprehension 
+        compatible_berths = [berth for berth in berth_df if (berth_df['MAX_DRAFT'] >= vessel_draft) and (berth_df['MAX_SIZE'] >= vessel_size)]
         
         if len(compatible_berths) == 0:
             print(f"No compatible berths found for {vessel_id}")

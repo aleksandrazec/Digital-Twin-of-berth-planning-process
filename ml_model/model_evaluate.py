@@ -1,11 +1,21 @@
 import torch
 import numpy as np
 
-from model import BerthAllocationModel
+import sys
+import os
 
-def evaluate():
+from model import BerthAllocationModel
+from data import load_data
+
+def evaluate(dataFile=None):
     # Load test data saved during training
-    X_test, y_test = torch.load("test_data.pt")
+    if dataFile is None:
+        X, y = load_data()
+        SPLIT = int(0.8 * len(X))
+        X_test, y_test = X[SPLIT:], y[SPLIT:]
+    else:
+        X_test, y_test = load_data(dataFile)
+
 
     model = BerthAllocationModel(input_dim=X_test.shape[1])
     model.load_state_dict(torch.load("berth_allocation_model.pth"))
@@ -27,4 +37,9 @@ def evaluate():
                   f"True: ATA={y_test_np[i,0]:.2f}, ATD={y_test_np[i,1]:.2f}, Berth_No={int(y_test_np[i,2])}")
 
 if __name__ == "__main__":
-    evaluate()
+    if len(sys.argv) == 2 and os.path.exists(f"{sys.argv[1]}.csv"):
+        print(f"Testing data on {sys.argv[1]}.csv")
+        evaluate(sys.argv[1])
+    else:
+        print("For testing your own data provide only 1 command line argument:\n\t-the path of the .csv file containing the data")
+        evaluate()
