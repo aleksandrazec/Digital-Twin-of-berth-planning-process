@@ -39,16 +39,14 @@ def assign_berths(berth_df, vessels_df):
         eta = vessel['ETA_TIME']
         etd = vessel['ETD_TIME']
         vessel_draft = vessel['VESSEL_MAX_DRAFT']
-        vessel_size = vessel.get('MAX_SIZE', 0)  
 
         
-        # compatible_berths = berth_df[
-        #     (berth_df['MAX_DRAFT'] >= vessel_draft) & 
-        #     (berth_df['MAX_SIZE'] >= vessel_size) 
-        # ]
+        compatible_berths = berth_df[
+            (berth_df['MAX_DRAFT'] >= vessel_draft)
+        ]
 
         # list comprehension 
-        compatible_berths = [berth for berth in berth_df if (berth_df['MAX_DRAFT'] >= vessel_draft) and (berth_df['MAX_SIZE'] >= vessel_size)]
+        #compatible_berths = [berth for berth in berth_df if (berth_df['MAX_DRAFT'] >= vessel_draft) and (berth_df['MAX_SIZE'] >= vessel_size)]
         
         if len(compatible_berths) == 0:
             print(f"No compatible berths found for {vessel_id}")
