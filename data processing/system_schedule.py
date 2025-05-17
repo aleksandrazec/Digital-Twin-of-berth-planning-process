@@ -59,7 +59,7 @@ def assign_berths(berth_df, vessels_df):
         if best_berth:
             assignment = {
                 'CALL_SIGN': vessel_id,
-                'BERTH': best_berth,
+                'BERTH': best_berth, 
                 'ASSIGNED_START': best_start_time,
                 'ESTIMATED_END': best_start_time + stay_duration
             }

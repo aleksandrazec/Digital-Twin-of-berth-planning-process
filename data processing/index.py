@@ -5,6 +5,8 @@ import csv_nonempty
 import seperator
 import system_schedule
 import weather_congestion
+import human_adjustment
+
 
 url_extractor.extract_urls()
 data_scrape.extract_data()
@@ -30,3 +32,5 @@ input_file1 = "./estimated_times_with_impacts.csv"
 input_file2 = "./operator_parameters.csv"
 output_file = "estimated_final.csv"
 csv_combinator.combine_two_csv_files(input_file1, input_file2, output_file, "AGENT_NAME")
+
+human_adjustment.main()
