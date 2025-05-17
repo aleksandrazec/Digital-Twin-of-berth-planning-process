@@ -6,12 +6,10 @@ import os
 output_dir = "vessel_info"
 os.makedirs(output_dir, exist_ok=True)
 
-urls = [
-    "https://www.mardep.gov.hk/e_files/en/pub_services/report_day0/RP05005.XML",
-    "https://www.mardep.gov.hk/e_files/en/pub_services/report_day0/RP04005.XML",
-    "https://www.mardep.gov.hk/e_files/en/pub_services/report_day0/RP04505.XML",
-    "https://www.mardep.gov.hk/e_files/en/pub_services/report_day0/RP05505.XML",
-]
+csv_file = "xml_links.csv"
+df_links = pd.read_csv(csv_file)
+
+urls = df_links['xml_link'].dropna().tolist()
 
 counter=0
 
