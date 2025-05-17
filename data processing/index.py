@@ -4,7 +4,7 @@ import csv_combinator
 import csv_nonempty
 import seperator
 import system_schedule
-
+import weather_congestion
 
 url_extractor.extract_urls
 data_scrape.extract_data
@@ -23,6 +23,8 @@ output_file2= "estimated_times.csv"
 seperator.seperate_actual_and_estimated(input_file, output_file1, output_file2)
 
 system_schedule.main()
+
+weather_congestion.main()
 
 input_file1 = "./estimated_times_with_impacts.csv"  
 input_file2 = "./operator_parameters.csv"
