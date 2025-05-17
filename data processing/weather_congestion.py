@@ -46,8 +46,8 @@ def main():
             weather_impacts.append(aggregate_impacts(eta, etd, weather_impact_by_hour))
             congestion_impacts.append(aggregate_impacts(eta, etd, congestion_impact_by_hour))
 
-    df["weather_impact_pct"] = weather_impacts
-    df["congestion_impact_pct"] = congestion_impacts
+    df["WEATHER_IMPACT_PCT"] = weather_impacts
+    df["CONGESTION_IMPACT_PCT"] = congestion_impacts
 
     df.to_csv(output_filename, index=False)
 

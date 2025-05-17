@@ -6,8 +6,8 @@ import seperator
 import system_schedule
 import weather_congestion
 
-url_extractor.extract_urls
-data_scrape.extract_data
+url_extractor.extract_urls()
+data_scrape.extract_data()
 
 input_folder = "./vessel_info"  
 output_file = "combined_times.csv"

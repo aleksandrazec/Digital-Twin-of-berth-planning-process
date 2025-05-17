@@ -21,7 +21,7 @@ def assign_berths(berth_df, vessels_df):
     assignments = []
     
     for _, vessel in vessels_df.iterrows():
-        vessel_name = vessel['VESSEL_NAME']
+        vessel_id = vessel['CALL_SIGN']
         eta = vessel['ETA_TIME']
         etd = vessel['ETD_TIME']
         vessel_draft = vessel['VESSEL_MAX_DRAFT']
@@ -34,7 +34,7 @@ def assign_berths(berth_df, vessels_df):
         ]
         
         if len(compatible_berths) == 0:
-            print(f"No compatible berths found for {vessel_name}")
+            print(f"No compatible berths found for {vessel_id}")
             continue
         
         best_berth = None
@@ -58,12 +58,10 @@ def assign_berths(berth_df, vessels_df):
         
         if best_berth:
             assignment = {
-                'VESSEL_NAME': vessel_name,
+                'CALL_SIGN': vessel_id,
                 'BERTH': best_berth,
-                'ETA': eta,
                 'ASSIGNED_START': best_start_time,
-                'ESTIMATED_END': best_start_time + stay_duration,
-                'WAIT_TIME': min_wait_time
+                'ESTIMATED_END': best_start_time + stay_duration
             }
             assignments.append(assignment)
             
