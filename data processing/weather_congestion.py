@@ -4,17 +4,17 @@ import os
 
 def weather_impact_by_hour(hour):
     if 0 <= hour < 6:
-        return np.random.uniform(30, 50)
+        return np.random.uniform(0.3, 0.5)
     elif 6 <= hour < 18:
-        return np.random.uniform(5, 20)
+        return np.random.uniform(0.05, 0.2)
     else:
-        return np.random.uniform(20, 35)
+        return np.random.uniform(0.2, 0.35)
 
 def congestion_impact_by_hour(hour):
     if 8 <= hour < 18:
-        return np.random.uniform(30, 60)
+        return np.random.uniform(0.3, 0.6)
     else:
-        return np.random.uniform(5, 20)
+        return np.random.uniform(0.05, 0.2)
 
 def aggregate_impacts(start_time, end_time, impact_func):
     hours_range = pd.date_range(start=start_time.floor('h'), end=end_time.floor('h'), freq='h')
@@ -26,7 +26,6 @@ def aggregate_impacts(start_time, end_time, impact_func):
 
 def main():
     
-
     input_filename = "./estimated_times.csv"
     output_filename = "estimated_times_with_impacts.csv"
 

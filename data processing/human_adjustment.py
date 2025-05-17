@@ -29,7 +29,7 @@ def main(
         augmented_df['EFFECTIVENESS_SCORE'] +
         augmented_df['RELIABILITY_SCORE'] +
         augmented_df['WORK_ENV_SCORE'] -
-        0.01 * (augmented_df['WEATHER_IMPACT_PCT'] + augmented_df['CONGESTION_IMPACT_PCT'])
+        (augmented_df['WEATHER_IMPACT_PCT'] + augmented_df['CONGESTION_IMPACT_PCT'])
     )
 
     augmented_df = augmented_df.sort_values(by='PRIORITY_SCORE', ascending=False)
