@@ -33,9 +33,4 @@ def seperate_actual_and_estimated(input_file, output_file1, output_file2, id_col
                 row2 = {k: v for k, v in row.items() if k != column1 and k!=column2}
                 writer2.writerow(row2)
 
-if __name__ == "__main__":
-    input_file = "./vessels_with_full_info.csv"  
-    output_file1 = "actual_times.csv"
-    output_file2= "estimated_times.csv"
-    seperate_actual_and_estimated(input_file, output_file1, output_file2)
     

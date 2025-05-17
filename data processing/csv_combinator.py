@@ -58,10 +58,3 @@ def combine_csv_files_from_folder(input_folder, output_file, id_column=0):
     print(f"Total unique IDs: {len(combined_data)}")
     print(f"Output columns ({len(all_headers)}): {', '.join(all_headers)}")
     print(f"Saved to: {output_file}")
-
-
-
-if __name__ == "__main__":
-    input_folder = "./vessel_info"  
-    output_file = "combined_times.csv"
-    combine_csv_files_from_folder(input_folder, output_file)

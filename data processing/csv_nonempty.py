@@ -28,8 +28,4 @@ def filter_nonempty_rows(input_file, output_file, id_column=0):
         writer.writerow(headers)
         writer.writerows(rows_to_keep)
     
-
-if __name__ == "__main__":
-    input_file = "./combined_times.csv"  
-    output_file = "vessels_with_full_info.csv"
-    filter_nonempty_rows(input_file, output_file)
+    
