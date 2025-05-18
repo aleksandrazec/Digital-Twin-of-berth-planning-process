@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 
 class BerthAllocationModel(nn.Module):
-    def __init__(self, input_dim):
+    def __init__(self, input_dim=11):
         super(BerthAllocationModel, self).__init__()
         self.model = nn.Sequential(
             nn.Linear(input_dim, 64),
