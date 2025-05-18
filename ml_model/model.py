@@ -19,10 +19,14 @@ class BerthAllocationModel(nn.Module):
         x = self.shared(x)
         berth_logits = self.berth_head(x)  # raw logits
         eta_etd = self.eta_etd_head(x)
-        return (berth_logits, eta_etd)
+        predicted_berth = torch.argmax(berth_logits, dim=1, keepdim=True).float() + 1  # shape: (batch_size, 1)
+
+        return  torch.cat([predicted_berth, eta_etd], dim=1)
+
 
 def fast_overlap_penalty(preds, penalty_weight=1.0):
-    Berth = torch.round(preds[:, 0])  # Already +1 adjusted
+    # preds must be a [batch_size, 3] tensor: [BERTH, ETA, ETD]
+    Berth = torch.round(preds[:, 0])
     ETA = preds[:, 1]
     ETD = preds[:, 2]
 
@@ -44,24 +48,15 @@ def fast_overlap_penalty(preds, penalty_weight=1.0):
 
     return penalty_weight * total_penalty / preds.shape[0]
 
-def custom_loss_fast(y_pred, y_true, penalty_weight=0.1, invalid_berth_weight=10.0):
-    berth_logits, eta_etd_pred = y_pred
 
-    berth_logits_true = y_true[:, 0] - 1  # adjust true labels from 1–50 to 0–49
-    eta_etd_true = y_true[:, 1:3]
+def custom_loss_fast(y_pred, y_true, penalty_weight=0.1):
+    # y_pred is [batch_size, 3]: [BERTH (predicted as class index + 1), ETA, ETD]
+    # y_true is also [batch_size, 3]: [BERTH (true, in 1–50), ETA, ETD]
 
-    berth_loss = nn.CrossEntropyLoss()(berth_logits, berth_logits_true.long())
-    mse = nn.MSELoss()(eta_etd_pred, eta_etd_true)
 
-    # Predict berth as class index + 1 (to get values 1–50)
-    predicted_berth = torch.argmax(berth_logits, dim=1) + 1
+    mse = nn.MSELoss()(y_pred, y_true)
 
-    # Combine for overlap penalty
-    preds_combined = torch.cat([
-        predicted_berth.unsqueeze(1).float(),
-        eta_etd_pred
-    ], dim=1)
+    # Overlap penalty
+    overlap = fast_overlap_penalty(y_pred, penalty_weight)
 
-    overlap = fast_overlap_penalty(preds_combined, penalty_weight)
-
-    return berth_loss + mse + overlap
+    return mse + overlap
