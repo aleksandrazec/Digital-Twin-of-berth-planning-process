@@ -10,19 +10,19 @@ class BerthAllocationModel(nn.Module):
             nn.Linear(64, 32),
             nn.ReLU(),
         )
-        self.berth_head = nn.Linear(32, 50) # 50 berth classes
+        self.berth_head = nn.Linear(32, 50)  # 50 berth classes (1 to 50)
         self.eta_etd_head = nn.Sequential(
-            nn.Linear(32, 2)
+            nn.Linear(32, 2)  # Predict H_ETA and H_ETD
         )
 
     def forward(self, x):
         x = self.shared(x)
-        berth_logits = self.berth_head(x)
+        berth_logits = self.berth_head(x)  # raw logits
         eta_etd = self.eta_etd_head(x)
         return (berth_logits, eta_etd)
 
 def fast_overlap_penalty(preds, penalty_weight=1.0):
-    Berth = torch.round(preds[:, 0])
+    Berth = torch.round(preds[:, 0])  # Already +1 adjusted
     ETA = preds[:, 1]
     ETD = preds[:, 2]
 
@@ -42,25 +42,26 @@ def fast_overlap_penalty(preds, penalty_weight=1.0):
     overlap_time = torch.relu(torch.min(ETD_i, ETD_j) - torch.max(ETA_i, ETA_j))
     total_penalty = overlap_time[penalty_matrix].sum()
 
-    
     return penalty_weight * total_penalty / preds.shape[0]
 
 def custom_loss_fast(y_pred, y_true, penalty_weight=0.1, invalid_berth_weight=10.0):
-    
     berth_logits, eta_etd_pred = y_pred
-    
-    berth_logits_true = y_true[:, 0]
-    eta_etd_true = torch.cat([y_true[:, 1], y_true[:, 2]]) 
-    
-    berth_loss = nn.CrossEntropyLoss()(berth_logits.long(), berth_logits_true.long())
 
+    berth_logits_true = y_true[:, 0] - 1  # adjust true labels from 1–50 to 0–49
+    eta_etd_true = y_true[:, 1:3]
+
+    berth_loss = nn.CrossEntropyLoss()(berth_logits, berth_logits_true.long())
     mse = nn.MSELoss()(eta_etd_pred, eta_etd_true)
+
+    # Predict berth as class index + 1 (to get values 1–50)
+    predicted_berth = torch.argmax(berth_logits, dim=1) + 1
+
+    # Combine for overlap penalty
     preds_combined = torch.cat([
-            torch.argmax(berth_logits, dim=1).unsqueeze(1).float(),  # predicted BERTH
-            eta_etd_pred
+        predicted_berth.unsqueeze(1).float(),
+        eta_etd_pred
     ], dim=1)
 
     overlap = fast_overlap_penalty(preds_combined, penalty_weight)
-
 
     return berth_loss + mse + overlap
