@@ -14,7 +14,7 @@ export function ComparisonView({ title, allocation, ships }: ComparisonViewProps
       <PortVisualizer allocation={allocation} ships={ships} />
 
       {}
-      <div className="mt-4 bg-white p-4 rounded-lg shadow-sm">
+      {/* <div className="mt-4 bg-white p-4 rounded-lg shadow-sm">
         <h4 className="font-medium mb-2">Allocation Statistics</h4>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="bg-gray-50 p-3 rounded-md">
@@ -47,7 +47,7 @@ export function ComparisonView({ title, allocation, ships }: ComparisonViewProps
             </p>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   )
 }

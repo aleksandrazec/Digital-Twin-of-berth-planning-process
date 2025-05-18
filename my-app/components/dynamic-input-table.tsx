@@ -4,7 +4,7 @@ import { Slider } from "@/components/ui/slider"
 
 interface DynamicInputTableProps {
   data: Record<
-    number,
+    string,
     {
       Effectiveness: number
       Reliability: number
@@ -13,8 +13,8 @@ interface DynamicInputTableProps {
       Congestion: number
     }
   >
-  shipIds: number[]
-  onChange: (shipId: number, field: string, value: number) => void
+  shipIds: string[]
+  onChange: (shipId: string, field: string, value: number) => void
 }
 
 export function DynamicInputTable({ data, shipIds, onChange }: DynamicInputTableProps) {
@@ -26,7 +26,7 @@ export function DynamicInputTable({ data, shipIds, onChange }: DynamicInputTable
     { name: "Congestion", label: "Congestion" },
   ]
 
-  const handleSliderChange = (shipId: number, field: string, value: number[]) => {
+  const handleSliderChange = (shipId: string, field: string, value: number[]) => {
     onChange(shipId, field, value[0])
   }
 
@@ -35,7 +35,7 @@ export function DynamicInputTable({ data, shipIds, onChange }: DynamicInputTable
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Ship ID</TableHead>
+            {/* <TableHead>Call Sign</TableHead> */}
             {fields.map((field) => (
               <TableHead key={field.name}>{field.label}</TableHead>
             ))}
@@ -44,25 +44,30 @@ export function DynamicInputTable({ data, shipIds, onChange }: DynamicInputTable
         <TableBody>
           {shipIds.map((shipId) => (
             <TableRow key={shipId}>
-              <TableCell>{shipId}</TableCell>
-              {fields.map((field) => (
-                <TableCell key={`${shipId}-${field.name}`} className="min-w-[150px]">
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm">
-                        {data[shipId][field.name as keyof (typeof data)[typeof shipId]].toFixed(2)}
-                      </span>
-                    </div>
-                    <Slider
-                      value={[data[shipId][field.name as keyof (typeof data)[typeof shipId]]]}
-                      min={0}
-                      max={1}
-                      step={0.01}
-                      onValueChange={(value) => handleSliderChange(shipId, field.name, value)}
-                    />
-                  </div>
-                </TableCell>
-              ))}
+              {/* <TableCell>{shipId}</TableCell> */}
+              {fields.map((field) => {
+                const value = data[shipId]?.[field.name as keyof typeof data[string]]
+                return (
+                  <TableCell key={`${shipId}-${field.name}`} className="min-w-[150px]">
+                    {value !== undefined ? (
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm">{typeof value === "number" ? value.toFixed(2) : Number(value).toFixed(2)}</span>
+                        </div>
+                        <Slider
+                          value={[value]}
+                          min={0}
+                          max={1}
+                          step={0.01}
+                          onValueChange={(val) => handleSliderChange(shipId, field.name, val)}
+                        />
+                      </div>
+                    ) : (
+                      <span className="text-muted">Loading...</span>
+                    )}
+                  </TableCell>
+                )
+              })}
             </TableRow>
           ))}
         </TableBody>

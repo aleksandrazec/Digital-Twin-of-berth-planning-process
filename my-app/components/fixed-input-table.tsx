@@ -1,35 +1,42 @@
-import type { Ship } from "@/lib/types"
+"use client"
+import { useEffect, useState } from "react"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 
-interface FixedInputTableProps {
-  data: Ship[]
+interface Ship {
+  CALL_SIGN: string
+  VESSEL_NAME: string
+  AGENT_NAME: string
+  ETA_TIME: string
+  ETD_TIME: string
 }
 
-export function FixedInputTable({ data }: FixedInputTableProps) {
+export default function FixedInputTable({data}: {data: any[]}) {
+  const [ships, setShips] = useState<Ship[]>([])
+  useEffect(() => {
+    fetch("/api/ships")
+      .then(res => res.json())
+      .then(data => setShips(data))
+  }, [])
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto p-4">
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Ship ID</TableHead>
-            <TableHead>Type</TableHead>
-            <TableHead>Size</TableHead>
-            <TableHead>Draft</TableHead>
+            <TableHead>Call Sign</TableHead>
             <TableHead>ETA</TableHead>
             <TableHead>ETD</TableHead>
-            <TableHead>Priority</TableHead>
+            <TableHead>Vessel Name</TableHead>
+            <TableHead>Agent</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {data.map((ship) => (
-            <TableRow key={ship.id}>
-              <TableCell>{ship.id}</TableCell>
-              <TableCell>{ship.Type}</TableCell>
-              <TableCell>{ship.Size}</TableCell>
-              <TableCell>{ship.Draft}</TableCell>
-              <TableCell>{ship.ETA}</TableCell>
-              <TableCell>{ship.ETD}</TableCell>
-              <TableCell>{ship.Priority_Of_Shipment}</TableCell>
+          {ships.map((ship, index) => (
+            <TableRow key={index}>
+              <TableCell>{ship.CALL_SIGN}</TableCell>
+              <TableCell>{ship.ETA_TIME}</TableCell>
+              <TableCell>{ship.ETD_TIME}</TableCell>
+              <TableCell>{ship.VESSEL_NAME}</TableCell>
+              <TableCell>{ship.AGENT_NAME}</TableCell>
             </TableRow>
           ))}
         </TableBody>
