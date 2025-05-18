@@ -2,9 +2,9 @@
 
 Berth Allocation Plan With ML is a full-stack system designed to assist port authorities in dynamically allocating berths to vessels based on real-time data and machine learning predictions. The model learns from human decision-making and historical port activity to suggest optimal berth schedules, improving efficiency and reducing delays.
 
-# Link to documentation: https://docs.google.com/document/d/1vb3uau422N3TEv_cRgWFavyMdnqGPm1yvpjquigVAmo/edit?usp=sharing
+## Link to documentation: https://docs.google.com/document/d/1vb3uau422N3TEv_cRgWFavyMdnqGPm1yvpjquigVAmo/edit?usp=sharing
 
-# Link to slides: https://docs.google.com/presentation/d/1zzWxjqRZm5vUCjnd470LImS5rYhCPTde7E4QuwMJTF8/edit?usp=sharing
+## Link to slides: https://docs.google.com/presentation/d/1zzWxjqRZm5vUCjnd470LImS5rYhCPTde7E4QuwMJTF8/edit?usp=sharing
 
 # Running the App
 
