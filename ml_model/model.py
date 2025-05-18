@@ -28,13 +28,12 @@ class BerthAllocationModel(nn.Module):
         out = self.model(x)
         etd = out[:, 0]
         eta = out[:, 1]
-        berth_raw = out[:, 2]
 
-        # Predict directly in [1, 50] range
-        berth_scaled = torch.sigmoid(berth_raw) * 49 + 1
-        berth_mapped = torch.round(berth_scaled).clamp(1, 50)
+        # Generate a random integer berth between 1 and 50 for each sample
+        batch_size = x.size(0)
+        berth_random = torch.randint(1, 51, (batch_size,), device=x.device, dtype=torch.float)
 
-        final_output = torch.stack([eta, etd, berth_mapped], dim=1)
+        final_output = torch.stack([eta, etd, berth_random], dim=1)
         return final_output
 
 def fast_overlap_penalty(preds, penalty_weight=1.0):
