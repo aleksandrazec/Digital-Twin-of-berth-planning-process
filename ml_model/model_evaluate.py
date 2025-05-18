@@ -7,14 +7,15 @@ import os
 from model import BerthAllocationModel
 from data import load_data
 
-def evaluate(dataFile=None):
+def evaluate(base_plan_file="dataset/berth_assignments_strict.csv",
+              human_adjusted_file="dataset/augmented_berth_assignments_strict.csv",
+              data_input_for_model_file="dataset/synthetic_estimated_final_full.csv",
+             split_part=0.8
+            ):
     # Load test data saved during training
-    if dataFile is None:
-        X, y = load_data()
-        SPLIT = int(0.8 * len(X))
-        X_test, y_test = X[SPLIT:], y[SPLIT:]
-    else:
-        X_test, y_test = load_data(dataFile)
+    X, y = load_data(base_plan_file, human_adjusted_file, data_input_for_model_file)
+    SPLIT = int(split_part * len(X))
+    X_test, y_test = X[SPLIT:], y[SPLIT:]
 
 
     model = BerthAllocationModel(input_dim=X_test.shape[1])
@@ -31,11 +32,11 @@ def evaluate(dataFile=None):
 
         y_test_np = y_test.numpy()
 
-        output_size = 10
+        output_size = 50
         print(f"\nFirst {output_size} Test Predictions vs True Labels:")
         for i in range(min(output_size, len(test_preds_np))):
-            print(f"Predicted: Berth_no={test_preds_np[i,0]:.2f}, ETA={test_preds_np[i,1]:.2f}, ETD={int(test_preds_np[i,2])} | "
-                  f"True: Berth_no={y_test_np[i,0]:.2f}, ETA={y_test_np[i,1]:.2f}, ETD={int(y_test_np[i,2])}")
+            print(f"Predicted: Berth_no={int(test_preds_np[i,2])}, ETA={test_preds_np[i,1]:.2f}, ETD={test_preds_np[i,0]} | "
+                  f"True: Berth_no={int(y_test_np[i,2])}, ETA={y_test_np[i,1]:.2f}, ETD={y_test_np[i,0]}")
 
 if __name__ == "__main__":
     if len(sys.argv) == 2 and os.path.exists(f"{sys.argv[1]}.csv"):

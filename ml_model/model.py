@@ -4,31 +4,43 @@ import torch.nn as nn
 class BerthAllocationModel(nn.Module):
     def __init__(self, input_dim):
         super(BerthAllocationModel, self).__init__()
-        self.shared = nn.Sequential(
+        self.model = nn.Sequential(
             nn.Linear(input_dim, 64),
             nn.ReLU(),
             nn.Linear(64, 32),
             nn.ReLU(),
-        )
-        self.berth_head = nn.Linear(32, 50)  # 50 berth classes (1 to 50)
-        self.eta_etd_head = nn.Sequential(
-            nn.Linear(32, 2)  # Predict H_ETA and H_ETD
+            nn.Linear(32, 3)  # Predicting ATA, ATD, Berth_No
         )
 
+
+    def map_tensor_to_berth_range(tensor, min_val=1, max_val=50):
+        clipped = torch.clamp(tensor, min=min_val, max=max_val)
+        mapped = torch.round(clipped)
+        return mapped.long()  # returns integer tensor
+
+    # def map_tensor_to_1_50(self, tensor):
+    #     # tanh gives values in [-1, 1]
+    #     scaled = (torch.tanh(tensor) + 1) / 2  # Now in [0, 1]
+    #     mapped = torch.floor(scaled * 49) + 1  # Now in [1, 50]
+    #     return mapped.clamp(1, 50).long()
+    
     def forward(self, x):
-        x = self.shared(x)
-        berth_logits = self.berth_head(x)  # raw logits
-        eta_etd = self.eta_etd_head(x)
-        predicted_berth = torch.argmax(berth_logits, dim=1, keepdim=True).float() + 1  # shape: (batch_size, 1)
+        out = self.model(x)
+        etd = out[:, 0]
+        eta = out[:, 1]
+        berth_raw = out[:, 2]
 
-        return  torch.cat([predicted_berth, eta_etd], dim=1)
+        # Predict directly in [1, 50] range
+        berth_scaled = torch.sigmoid(berth_raw) * 49 + 1
+        berth_mapped = torch.round(berth_scaled).clamp(1, 50)
 
+        final_output = torch.stack([eta, etd, berth_mapped], dim=1)
+        return final_output
 
 def fast_overlap_penalty(preds, penalty_weight=1.0):
-    # preds must be a [batch_size, 3] tensor: [BERTH, ETA, ETD]
-    Berth = torch.round(preds[:, 0])
-    ETA = preds[:, 1]
-    ETD = preds[:, 2]
+    ETA = preds[:, 0]
+    ETD = preds[:, 1]
+    Berth = torch.round(preds[:, 2])
 
     Berth_i = Berth.unsqueeze(0)
     ETA_i = ETA.unsqueeze(0)
@@ -50,13 +62,6 @@ def fast_overlap_penalty(preds, penalty_weight=1.0):
 
 
 def custom_loss_fast(y_pred, y_true, penalty_weight=0.1):
-    # y_pred is [batch_size, 3]: [BERTH (predicted as class index + 1), ETA, ETD]
-    # y_true is also [batch_size, 3]: [BERTH (true, in 1–50), ETA, ETD]
-
-
     mse = nn.MSELoss()(y_pred, y_true)
-
-    # Overlap penalty
     overlap = fast_overlap_penalty(y_pred, penalty_weight)
-
     return mse + overlap

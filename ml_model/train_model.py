@@ -6,11 +6,15 @@ from sklearn.model_selection import train_test_split
 from data import load_data
 from model import BerthAllocationModel, custom_loss_fast
 
-def train():
-    X, y = load_data()
+def train(  base_plan_file="dataset/berth_assignments_strict.csv",
+              human_adjusted_file="dataset/augmented_berth_assignments_strict.csv",
+              data_input_for_model_file="dataset/synthetic_estimated_final_full.csv",
+            split_part=0.8
+            ):
+    X, y = load_data(base_plan_file, human_adjusted_file, data_input_for_model_file)
 
     # Split data into train/test
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=1-split_part, random_state=42)
 
     train_dataset = TensorDataset(X_train, y_train)
     train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)

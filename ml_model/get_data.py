@@ -7,9 +7,9 @@ from sklearn.impute import SimpleImputer
 
 
 
-def get_data(base_plan="../data processing/berth_assignments.csv",
-            human_adjusted="../data processing/augmented_berth_assignments.csv",
-            data_input_for_model="../data processing/estimated_final.csv"
+def get_data(base_plan_file="dataset/berth_assignments_strict.csv",
+              human_adjusted_file="dataset/augmented_berth_assignments_strict.csv",
+              data_input_for_model_file="dataset/synthetic_estimated_final_full.csv"
             ):
     """
     returns 3 values:
@@ -19,11 +19,11 @@ def get_data(base_plan="../data processing/berth_assignments.csv",
     """
 
     # df = pandas.Dataframe
-    base_plan_df = pd.read_csv(base_plan)
+    base_plan_df = pd.read_csv(base_plan_file)
 
-    human_adjusted_df = pd.read_csv(human_adjusted)
+    human_adjusted_df = pd.read_csv(human_adjusted_file)
 
-    data_input_for_model = pd.read_csv(data_input_for_model)
+    data_input_for_model_file = pd.read_csv(data_input_for_model_file)
 
 
     base_plan_df = base_plan_df.rename(columns={
@@ -43,12 +43,12 @@ def get_data(base_plan="../data processing/berth_assignments.csv",
     # merge data into 1 thing
     merged_df = base_plan_df.merge(human_adjusted_df, on='CALL_SIGN')
 
-    merged_df = merged_df.merge(data_input_for_model, on="CALL_SIGN")
+    merged_df = merged_df.merge(data_input_for_model_file, on="CALL_SIGN")
 
     # TODO
     # ETD_TIME, ETA_TIME ?
     feature_cols = ["BASE_BERTH", "BASE_ETA", "BASE_ETD", "AGENT_NAME", "VESSEL_NAME", "VESSEL_MAX_DRAFT", "WEATHER_IMPACT_PCT", "CONGESTION_IMPACT_PCT", "EFFECTIVENESS_SCORE", "RELIABILITY_SCORE", "WORK_ENV_SCORE"]
-    label_cols = ["H_BERTH", "H_ETA", "H_ETD"]
+    label_cols = ["H_ETA", "H_ETD", "H_BERTH"]
 
 
 
@@ -60,12 +60,12 @@ def get_data(base_plan="../data processing/berth_assignments.csv",
     #   - FLAG
     #   - H_BERTH
 
-    le = LabelEncoder
     string_col_names = ["BASE_BERTH", "AGENT_NAME", "VESSEL_NAME", "H_BERTH"]
     for col_name in string_col_names:
         # print(col_name)
         # print(merged_df[col_name])
-        merged_df[col_name] = le.fit_transform(le, merged_df[col_name])
+        le = LabelEncoder()
+        merged_df[col_name] = le.fit_transform(merged_df[col_name])
         # print(merged_df[col_name])
 
 
