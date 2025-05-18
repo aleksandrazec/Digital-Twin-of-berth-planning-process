@@ -1,104 +1,131 @@
-import pandas as pd
-import numpy as np
-import torch
-from sklearn.preprocessing import LabelEncoder
+# Berth Allocation Plan With ML
 
-def load_data():
-    data, feature_cols, label_cols = get_data()
+Berth Allocation Plan With ML is a full-stack system designed to assist port authorities in dynamically allocating berths to vessels based on real-time data and machine learning predictions. The model learns from human decision-making and historical port activity to suggest optimal berth schedules, improving efficiency and reducing delays.
 
-    # Create LabelEncoders for BASE_BERTH and H_BERTH
-    le_base_berth = LabelEncoder()
-    le_h_berth = LabelEncoder()
+# Link to documentation: https://docs.google.com/document/d/1vb3uau422N3TEv_cRgWFavyMdnqGPm1yvpjquigVAmo/edit?usp=sharing
 
-    # Encode berth strings to integer classes
-    data["BASE_BERTH_enc"] = le_base_berth.fit_transform(data["BASE_BERTH"])
-    data["H_BERTH_enc"] = le_h_berth.fit_transform(data["H_BERTH"])
+# Link to slides: https://docs.google.com/presentation/d/1zzWxjqRZm5vUCjnd470LImS5rYhCPTde7E4QuwMJTF8/edit?usp=sharing
 
-    # Replace berth columns in feature_cols and label_cols with encoded versions
-    feature_cols_mod = feature_cols.copy()
-    label_cols_mod = label_cols.copy()
+# Running the App
 
-    # Replace original berth columns with encoded ones
-    feature_cols_mod = [col for col in feature_cols_mod if col != "BASE_BERTH"]
-    feature_cols_mod.append("BASE_BERTH_enc")
+1. Clone the repo:
+```bash
+git clone https://github.com/aleksandrazec/Digital-Twin-of-berth-planning-process.git
+cd Digital-Twin-of-berth-planning-process
+```
 
-    label_cols_mod = [col for col in label_cols_mod if col != "H_BERTH"]
-    label_cols_mod.append("H_BERTH_enc")
+# Libraries that we used:
 
-    # Prepare feature tensor (float for continuous + int for berth)
-    X_float = data[[col for col in feature_cols_mod if col != "BASE_BERTH_enc"]].values.astype(np.float32)
-    X_berth = data["BASE_BERTH_enc"].values.astype(np.int64)
+## PyTorch
 
-    # Combine continuous features and berth class into a single tensor (float + int)
-    # We cannot combine int and float easily in one tensor, so pass them separately to model
-    X_float_tensor = torch.tensor(X_float)
-    X_berth_tensor = torch.tensor(X_berth, dtype=torch.long)
+PyTorch is an open source machine learning (ML) framework based on the Python programming language and the Torch library
 
-    # Prepare label tensor
-    y_float = data[[col for col in label_cols_mod if col != "H_BERTH_enc"]].values.astype(np.float32)
-    y_berth = data["H_BERTH_enc"].values.astype(np.int64)
+### Installation
 
-    y_float_tensor = torch.tensor(y_float)
-    y_berth_tensor = torch.tensor(y_berth, dtype=torch.long)
+Use the package manager https://pytorch.org/get-started/locally/ to install PyTorch library.
 
-    return (X_float_tensor, X_berth_tensor), (y_float_tensor, y_berth_tensor), le_base_berth, le_h_berth
+```bash
+pip install torch torchvision torchaudio
+```
+
+## Pandas
+
+Pandas is an open-source data analysis and manipulation library for Python
+
+### Installation
+
+```bash
+pip install pandas
+```
+
+## NumPy
+
+NumPy is an open source library for numerical computing in Python. It provides support for large, multi-dimensional arrays and matrices, along with a collection of mathematical functions to operate on these arrays
+
+### Installation
+
+```bash
+pip install numpy
+```
+
+## BeautifulSoup
+
+BeautifulSoup is a Python library used for parsing HTML and XML documents. It is commonly used for web scraping and extracting data from web pages
+
+### Installation
+
+```bash
+pip install beautifulsoup4
+```
+
+## scikit-learn
+
+scikit-learn is an open source machine learning library for the Python programming language. It provides simple and efficient tools for data mining and data analysis, built on top of NumPy, SciPy, and matplotlib
+
+### Installation
+
+```bash
+pip install scikit-learn
+```
+
+## How It Works
+
+- Scrape XML files from Hong Kong Marine Department using BeautifulSoup.
+- Convert them into structured tabular data using pandas.
+- Normalize features and prepare training/validation sets.
+- Train the ML model to mimic expert decisions.
+- Deploy model and serve predictions via a full-stack interface.
+
+# How we collected data? 
+## Our realistic data was scraped:
+### Due To Enter Hong Kong Report,https://www.mardep.gov.hk/e_files/en/pub_services/report_day0/RP04005.XML
+    Intend To Depart Hong Kong Report,https://www.mardep.gov.hk/e_files/en/pub_services/report_day0/RP04505.XML
+    Enter Hong Kong Water Report,https://www.mardep.gov.hk/e_files/en/pub_services/report_day0/RP05005.XML
+    Depart Hong Kong Water Report,https://www.mardep.gov.hk/e_files/en/pub_services/report_day0/RP05505.XML
+    Due To Enter Hong Kong Report,https://www.mardep.gov.hk/e_files/en/pub_services/report_day1/RP04005.XML
+    Intend To Depart Hong Kong Report,https://www.mardep.gov.hk/e_files/en/pub_services/report_day1/RP04505.XML
+    Enter Hong Kong Water Report,https://www.mardep.gov.hk/e_files/en/pub_services/report_day1/RP05005.XML
+    Depart Hong Kong Water Report,https://www.mardep.gov.hk/e_files/en/pub_services/report_day1/RP05505.XML
+    Due To Enter Hong Kong Report,https://www.mardep.gov.hk/e_files/en/pub_services/report_day2/RP04005.XML
+    Intend To Depart Hong Kong Report,https://www.mardep.gov.hk/e_files/en/pub_services/report_day2/RP04505.XML
+    Enter Hong Kong Water Report,https://www.mardep.gov.hk/e_files/en/pub_services/report_day2/RP05005.XML
+    Depart Hong Kong Water Report,https://www.mardep.gov.hk/e_files/en/pub_services/report_day2/RP05505.XML
+    Due To Enter Hong Kong Report,https://www.mardep.gov.hk/e_files/en/pub_services/report_day3/RP04005.XML
+    Intend To Depart Hong Kong Report,https://www.mardep.gov.hk/e_files/en/pub_services/report_day3/RP04505.XML
+    Enter Hong Kong Water Report,https://www.mardep.gov.hk/e_files/en/pub_services/report_day3/RP05005.XML
+    Depart Hong Kong Water Report,https://www.mardep.gov.hk/e_files/en/pub_services/report_day3/RP05505.XML
+    Due To Enter Hong Kong Report,https://www.mardep.gov.hk/e_files/en/pub_services/report_day4/RP04005.XML
+    Intend To Depart Hong Kong Report,https://www.mardep.gov.hk/e_files/en/pub_services/report_day4/RP04505.XML
+    Enter Hong Kong Water Report,https://www.mardep.gov.hk/e_files/en/pub_services/report_day4/RP05005.XML
+    Depart Hong Kong Water Report,https://www.mardep.gov.hk/e_files/en/pub_services/report_day4/RP05505.XML
+    Due To Enter Hong Kong Report,https://www.mardep.gov.hk/e_files/en/pub_services/report_day5/RP04005.XML
+    Intend To Depart Hong Kong Report,https://www.mardep.gov.hk/e_files/en/pub_services/report_day5/RP04505.XML
+    Enter Hong Kong Water Report,https://www.mardep.gov.hk/e_files/en/pub_services/report_day5/RP05005.XML
+    Depart Hong Kong Water Report,https://www.mardep.gov.hk/e_files/en/pub_services/report_day5/RP05505.XML
+    Due To Enter Hong Kong Report,https://www.mardep.gov.hk/e_files/en/pub_services/report_day6/RP04005.XML
+    Intend To Depart Hong Kong Report,https://www.mardep.gov.hk/e_files/en/pub_services/report_day6/RP04505.XML
+    Enter Hong Kong Water Report,https://www.mardep.gov.hk/e_files/en/pub_services/report_day6/RP05005.XML
+    Depart Hong Kong Water Report,https://www.mardep.gov.hk/e_files/en/pub_services/report_day6/RP05505.XML
+
+
+## Authors
+
+- Filip Trajkoski - https://github.com/FT1E
+- Simona Cholakova — https://github.com/simona-cholakova
+- Aleksandra Zec - https://github.com/aleksandrazec
+- Nade Belovinova - https://github.com/bel-n
 
 
 
-import torch
-import torch.nn as nn
-import torch.nn.functional as F
-
-class BerthAllocationModel(nn.Module):
-    def __init__(self, input_dim_float, num_berth_classes):
-        super(BerthAllocationModel, self).__init__()
-        
-        # Embedding for berth input feature
-        self.berth_embedding = nn.Embedding(num_berth_classes, embedding_dim=8)
-        
-        # Fully connected layers for float features
-        self.fc_float = nn.Sequential(
-            nn.Linear(input_dim_float, 64),
-            nn.ReLU(),
-            nn.Linear(64, 32),
-            nn.ReLU()
-        )
-        
-        # Combine embedded berth + processed float features
-        self.fc_combined = nn.Sequential(
-            nn.Linear(32 + 8, 64),
-            nn.ReLU(),
-        )
-        
-        # Output heads:
-        # 1) ETA and ETD (continuous regression)
-        self.out_times = nn.Linear(64, 2)  # predict ETA and ETD
-        
-        # 2) Berth classification (number of classes)
-        self.out_berth = nn.Linear(64, num_berth_classes)
-    
-    def forward(self, x_float, x_berth):
-        # x_float: (batch_size, float_features)
-        # x_berth: (batch_size,) int64 tensor for berth class
-        
-        berth_embedded = self.berth_embedding(x_berth)  # (batch_size, embedding_dim)
-        
-        float_feat = self.fc_float(x_float)  # (batch_size, 32)
-        
-        combined = torch.cat([float_feat, berth_embedded], dim=1)  # (batch_size, 40)
-        
-        combined_feat = self.fc_combined(combined)  # (batch_size, 64)
-        
-        times_pred = self.out_times(combined_feat)  # (batch_size, 2) float
-        berth_logits = self.out_berth(combined_feat)  # (batch_size, num_berth_classes)
-        
-        return times_pred, berth_logits
 
 
-mse_loss = nn.MSELoss()
-ce_loss = nn.CrossEntropyLoss()
 
-def combined_loss(times_pred, times_true, berth_logits, berth_true):
-    loss_times = mse_loss(times_pred, times_true)
-    loss_berth = ce_loss(berth_logits, berth_true)
-    return loss_times + loss_berth
+
+
+
+
+
+
+
+
+
