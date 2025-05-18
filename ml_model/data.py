@@ -27,8 +27,8 @@ def load_data(filepath="your_combined_dataset.csv"):
                                                 "./dataset/synthetic_estimated_final_full.csv"
                                                 ) 
     
-    pd.set_option('display.max_columns', None)
-    pd.set_option('display.max_rows', None)
+    # pd.set_option('display.max_columns', 10)
+    # pd.set_option('display.max_rows', 10)
 
     # print(data[feature_cols])
     # print(data[label_cols])

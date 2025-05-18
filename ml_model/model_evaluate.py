@@ -27,15 +27,15 @@ def evaluate(dataFile=None):
         print(f"\nTest MSE Loss: {mse_loss.item():.4f}")
 
         test_preds_np = test_preds.numpy()
-        test_preds_np[:, 2] = np.round(test_preds_np[:, 2])
+        test_preds_np[:, 0] = np.round(test_preds_np[:, 0])
 
         y_test_np = y_test.numpy()
 
-        output_size = 100
+        output_size = 10
         print(f"\nFirst {output_size} Test Predictions vs True Labels:")
         for i in range(min(output_size, len(test_preds_np))):
-            print(f"Predicted: ATA={test_preds_np[i,0]:.2f}, ATD={test_preds_np[i,1]:.2f}, Berth_No={int(test_preds_np[i,2])} | "
-                  f"True: ATA={y_test_np[i,0]:.2f}, ATD={y_test_np[i,1]:.2f}, Berth_No={int(y_test_np[i,2])}")
+            print(f"Predicted: Berth_no={test_preds_np[i,0]:.2f}, ETA={test_preds_np[i,1]:.2f}, ETD={int(test_preds_np[i,2])} | "
+                  f"True: Berth_no={y_test_np[i,0]:.2f}, ETA={y_test_np[i,1]:.2f}, ETD={int(y_test_np[i,2])}")
 
 if __name__ == "__main__":
     if len(sys.argv) == 2 and os.path.exists(f"{sys.argv[1]}.csv"):
