@@ -150,7 +150,7 @@ export default function BerthAllocationSystem() {
         <PortVisualizer allocation={baseAllocation} ships={fixedData} />
       </div>
 
-      {/* Bottom Section - Comparison Views
+      {/* Bottom Section - Comparison Views */}
       <div className="mb-8">
         <h2 className="text-xl font-semibold mb-4">Allocation Comparisons</h2>
         <Tabs defaultValue="human">
@@ -165,7 +165,7 @@ export default function BerthAllocationSystem() {
             <ComparisonView title="Machine Learning Allocation" allocation={mlAllocation} ships={fixedData} />
           </TabsContent>
         </Tabs>
-      </div> */}
+      </div>
     </div>
   )
 }
