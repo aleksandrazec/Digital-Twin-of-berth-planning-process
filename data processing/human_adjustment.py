@@ -22,8 +22,8 @@ def main(
     augmented_df['EFFECTIVENESS_SCORE'] = augmented_df['EFFECTIVENESS_SCORE'].fillna(0.5)
     augmented_df['RELIABILITY_SCORE'] = augmented_df['RELIABILITY_SCORE'].fillna(0.5)
     augmented_df['WORK_ENV_SCORE'] = augmented_df['WORK_ENV_SCORE'].fillna(0.5)
-    augmented_df['WEATHER_IMPACT_PCT'] = augmented_df['WEATHER_IMPACT_PCT'].fillna(50.0)
-    augmented_df['CONGESTION_IMPACT_PCT'] = augmented_df['CONGESTION_IMPACT_PCT'].fillna(50.0)
+    augmented_df['WEATHER_IMPACT_PCT'] = augmented_df['WEATHER_IMPACT_PCT'].fillna(0.5)
+    augmented_df['CONGESTION_IMPACT_PCT'] = augmented_df['CONGESTION_IMPACT_PCT'].fillna(0.5)
 
     augmented_df['PRIORITY_SCORE'] = (
         augmented_df['EFFECTIVENESS_SCORE'] +
