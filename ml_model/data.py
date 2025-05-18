@@ -22,13 +22,16 @@ def load_data(filepath="your_combined_dataset.csv"):
 
     
 
-    data, feature_cols, label_cols = get_data() 
+    data, feature_cols, label_cols = get_data(  "./dataset/berth_assignments_strict.csv",
+                                                "./dataset/augmented_berth_assignments_strict.csv",
+                                                "./dataset/synthetic_estimated_final_full.csv"
+                                                ) 
     
     pd.set_option('display.max_columns', None)
     pd.set_option('display.max_rows', None)
 
-    print(data[feature_cols])
-    print(data[label_cols])
+    # print(data[feature_cols])
+    # print(data[label_cols])
 
     
 

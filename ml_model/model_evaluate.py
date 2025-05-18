@@ -31,8 +31,9 @@ def evaluate(dataFile=None):
 
         y_test_np = y_test.numpy()
 
-        print("\nFirst 10 Test Predictions vs True Labels:")
-        for i in range(min(10, len(test_preds_np))):
+        output_size = 100
+        print(f"\nFirst {output_size} Test Predictions vs True Labels:")
+        for i in range(min(output_size, len(test_preds_np))):
             print(f"Predicted: ATA={test_preds_np[i,0]:.2f}, ATD={test_preds_np[i,1]:.2f}, Berth_No={int(test_preds_np[i,2])} | "
                   f"True: ATA={y_test_np[i,0]:.2f}, ATD={y_test_np[i,1]:.2f}, Berth_No={int(y_test_np[i,2])}")
 
