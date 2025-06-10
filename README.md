@@ -111,8 +111,8 @@ pip install scikit-learn
 ## Authors
 
 - Filip Trajkoski - https://github.com/FT1E
-- Simona Cholakova — https://github.com/simona-cholakova
 - Aleksandra Zec - https://github.com/aleksandrazec
+- Simona Cholakova — https://github.com/simona-cholakova
 - Nade Belovinova - https://github.com/bel-n
 
 
